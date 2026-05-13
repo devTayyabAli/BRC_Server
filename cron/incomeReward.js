@@ -18,7 +18,10 @@ let retryCount = 0;
 
 const timeString = process.env.APP_ENV !== 'production' ? 10 : 24;
 const durationString = process.env.APP_ENV !== 'production' ? "minutes" : "hour";
-const cronTiming = process.env.APP_ENV !== 'production' ? "*/3 * * * *" : "5 0 * * *";
+const cronTiming =
+  process.env.APP_ENV !== 'production'
+    ? "0 * * * *"
+    : "5 0 * * *";
 const saveIncomeRewardCron = cron.schedule(cronTiming, async () => {
   try {
     console.log("🚀 ~ saveIncomeRewardCron started");
@@ -175,13 +178,13 @@ const upsertDataInUserOtherReward = async (user, startOfDay) => {
               sendCappingLimitEmail(user?.email);
               break;
             }
-            
+
             const whereClause = { //
               $gte: startOfDay, // Greater than or equal to start of day
               $lt: momentFormated() // Less than the next day
             };
 
-           
+
             const stakeRewardDistribution = await UserStakeReward.findOne({
               userId: member?.userId,
               stakeId: stake?._id,
